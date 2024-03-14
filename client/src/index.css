@@ -1,0 +1,27 @@
+* {
+  margin: 0%;
+  padding: 0%;
+}
+
+.chat-container {
+  width: 90vw; /* Set desired width */
+  height: 90vh; /* Set desired height */
+}
+
+.sidebar {
+  height: 90vh; /* Fill the entire height */
+}
+
+.message-area {
+  height: calc(
+    100% - 50px
+  ); /* Fill remaining height, subtracting input area height */
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+}
+
+.input-area {
+  position: absolute;
+  bottom: 0%;
+  left: 25%;
+  width: 1300px;
+}
