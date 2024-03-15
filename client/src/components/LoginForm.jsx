@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,11 +15,29 @@ const LoginForm = () => {
     setPassword(e.target.value);
   };
 
+  const signInUser = async (email, password) => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/auth/login",
+        {
+          email,
+          password,
+        }
+      );
+
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      navigate("/chat");
+    } catch (error) {
+      alert("Invalid credentials");
+      console.error("Error during request setup:", error.message);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission, e.g., call an API
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    signInUser(email, password);
+
     // Reset form fields
     setEmail("");
     setPassword("");
