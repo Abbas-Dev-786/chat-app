@@ -11,7 +11,6 @@ class SocketService {
         origin: "*",
       },
     });
-    // sub.subscribe("MESSAGES");
   }
 
   initListeners() {
@@ -20,22 +19,15 @@ class SocketService {
 
     io.on("connect", (socket) => {
       console.log(`New Socket Connected`, socket.id);
-      socket.on("event:message", ({ message }) => {
+      socket.on("event:message", ({ message, rec, sen }) => {
         console.log("New Message Rec.", message);
-        io.emit("message", message);
-        // publish this message to redis
-        // await pub.publish("MESSAGES", JSON.stringify({ message }));
+        console.log("Sending Message to reciever", rec);
+        console.log("Sending Message to sender", sen);
+
+        io.emit(rec, message);
+        io.emit(sen, message);
       });
     });
-
-    // sub.on("message", async (channel, message) => {
-    //   if (channel === "MESSAGES") {
-    //     console.log("new message from redis", message);
-    // io.emit("message", message);
-    //     await produceMessage(message);
-    //     console.log("Message Produced to Kafka Broker");
-    //   }
-    // });
   }
 
   get io() {
