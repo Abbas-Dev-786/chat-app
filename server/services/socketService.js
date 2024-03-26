@@ -1,4 +1,6 @@
 const { Server } = require("socket.io");
+const User = require("../models/userModel");
+const Chat = require("../models/chatModel");
 
 class SocketService {
   _io;
@@ -19,13 +21,40 @@ class SocketService {
 
     io.on("connect", (socket) => {
       console.log(`New Socket Connected`, socket.id);
-      socket.on("event:message", ({ message, rec, sen }) => {
-        console.log("New Message Rec.", message);
-        console.log("Sending Message to reciever", rec);
-        console.log("Sending Message to sender", sen);
 
-        io.emit(rec, message);
-        io.emit(sen, message);
+      // message event
+      socket.on("event:message", async ({ message, rec, sen }) => {
+        const sender = await User.findById(sen);
+        const receiver = await User.findById(rec);
+
+        if (sender && receiver) {
+          const data = await Chat.create({
+            sender: sen,
+            reciever: rec,
+            content: message,
+          });
+
+          // message event emitter
+          io.emit(`msg:${rec}`, data);
+          io.emit(`msg:${sen}`, data);
+        } else {
+          // message error event emitter
+          io.emit(`msg:err`, [rec, sen]);
+        }
+      });
+
+      // typing start event
+      socket.on("event:typing-start", ({ sender }) => {
+        console.log(`${sender} is Typing`);
+
+        // typing start event emitter
+        io.emit(`typing-start:${sender}`, null);
+      });
+
+      // typing end event
+      socket.on("event:typing-end", ({ sender }) => {
+        // typing end event emitter
+        io.emit(`typing-end:${sender}`, null);
       });
     });
   }

@@ -4,6 +4,7 @@ const morgan = require("morgan");
 
 const authRouter = require("./routes/authRoute");
 const userRouter = require("./routes/userRoute");
+const chatRouter = require("./routes/chatRoute");
 const AppError = require("./utils/AppError");
 const globalErrorHandler = require("./controllers/errorController");
 
@@ -18,6 +19,7 @@ app.use(morgan("dev"));
 const BASE_URL = "/api/v1";
 app.use(`${BASE_URL}/auth`, authRouter);
 app.use(`${BASE_URL}/users`, userRouter);
+app.use(`${BASE_URL}/chats`, chatRouter);
 
 // invalid route handler
 app.all("*", (req, _, next) =>
