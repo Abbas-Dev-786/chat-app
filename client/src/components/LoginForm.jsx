@@ -26,6 +26,7 @@ const LoginForm = () => {
       );
 
       localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      localStorage.setItem("token", JSON.stringify(response.data.data.token));
       navigate("/chat");
     } catch (error) {
       alert("Invalid credentials");
