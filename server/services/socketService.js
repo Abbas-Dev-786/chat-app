@@ -23,7 +23,7 @@ class SocketService {
       console.log(`New Socket Connected`, socket.id);
 
       // message event
-      socket.on("event:message", async ({ message, rec, sen }) => {
+      socket.on("event:message", async ({ message, rec, sen, attachments }) => {
         const sender = await User.findById(sen);
         const receiver = await User.findById(rec);
 
@@ -32,6 +32,7 @@ class SocketService {
             sender: sen,
             reciever: rec,
             content: message,
+            attachments,
           });
 
           // message event emitter
