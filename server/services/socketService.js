@@ -24,29 +24,37 @@ class SocketService {
 
       // message event
       socket.on("event:message", async ({ message, rec, sen, attachments }) => {
-        const sender = await User.findById(sen);
-        const receiver = await User.findById(rec);
+        // const sender = await User.findById(sen);
+        // const receiver = await User.findById(rec);
 
-        if (sender && receiver) {
-          const data = await Chat.create({
-            sender: sen,
-            reciever: rec,
-            content: message,
-            attachments,
-          });
+        // if (sender && receiver) {
+        // const data = await Chat.create({
+        //   sender: sen,
+        //   reciever: rec,
+        //   content: message,
+        //   attachments,
+        // });
 
-          // message event emitter
-          io.emit(`msg:${rec}`, data);
-          io.emit(`msg:${sen}`, data);
-        } else {
-          // message error event emitter
-          io.emit(`msg:err`, [rec, sen]);
-        }
+        const data = {
+          sender: sen,
+          reciever: rec,
+          content: message,
+          attachments,
+          createdAt: new Date(),
+        };
+
+        // message event emitter
+        io.emit(`msg:${rec}`, data);
+        io.emit(`msg:${sen}`, data);
+        // } else {
+        //   // message error event emitter
+        //   io.emit(`msg:err`, [rec, sen]);
+        // }
       });
 
       // typing start event
       socket.on("event:typing-start", ({ sender }) => {
-        console.log(`${sender} is Typing`);
+        console.log(`id no ${sender} is Typing`);
 
         // typing start event emitter
         io.emit(`typing-start:${sender}`, null);
